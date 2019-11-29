@@ -1,0 +1,47 @@
+{
+  "id": "97e1ca1e-4861-4c6f-ae83-0378aed3ea9f",
+  "version": "2.0",
+  "name": "Overlay",
+  "url": "https://powerlessredhandedtamarin.htmlpasta.com",
+  "tests": [{
+    "id": "bb223260-28ea-444c-978a-6f1fbcee1d8c",
+    "name": "Click button below underlay",
+    "commands": [{
+      "id": "e70cc77b-8c99-4716-b2e0-cb026fae0956",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "6c90f013-2468-4f1a-8982-20d0a32bbe5b",
+      "comment": "",
+      "command": "click",
+      "target": "css=button",
+      "targets": [
+        ["css=button", "css:finder"],
+        ["xpath=//button[@onclick=\"alert('Pong')\"]", "xpath:attributes"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Ping')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "8cb2d16f-b23e-4de6-b818-f81041129af4",
+      "comment": "",
+      "command": "assertAlert",
+      "target": "Pong",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "04ba0651-8ad9-4426-8d41-97855ba22401",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["bb223260-28ea-444c-978a-6f1fbcee1d8c"]
+  }],
+  "urls": ["https://powerlessredhandedtamarin.htmlpasta.com/"],
+  "plugins": []
+}
