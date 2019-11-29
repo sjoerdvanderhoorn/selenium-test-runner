@@ -1,0 +1,73 @@
+{
+  "id": "56d489a2-e3e7-4250-955d-995fd9f37ed0",
+  "version": "2.0",
+  "name": "bbb",
+  "url": "http://localhost",
+  "tests": [{
+    "id": "2e71d6a2-2399-4028-80f2-ae610aebf7ad",
+    "name": "bbb",
+    "commands": [{
+      "id": "ffbe1e64-08e7-4fbb-9790-d47331d571ec",
+      "comment": "",
+      "command": "open",
+      "target": "/login",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "e9159063-8f48-4cde-bcac-9cd8b8f388f6",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1920x1160",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "b4e003a5-ac26-4353-80ce-0f5632f87302",
+      "comment": "",
+      "command": "assertText",
+      "target": "id=signin",
+      "targets": [
+        ["id=signin", "id"],
+        ["css=#signin", "css:finder"],
+        ["xpath=//button[@id='signin']", "xpath:attributes"],
+        ["xpath=//form[@id='loginForm']/div/div/div/div/div/div[2]/div[2]/button", "xpath:idRelative"],
+        ["xpath=//button", "xpath:position"],
+        ["xpath=//button[contains(.,'Sign In')]", "xpath:innerText"]
+      ],
+      "value": "Sign In"
+    }, {
+      "id": "d315c879-ad50-4c07-b5e7-4c78bcd72905",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.text-center:nth-child(4)",
+      "targets": [
+        ["css=.text-center:nth-child(4)", "css:finder"],
+        ["xpath=//form[@id='loginForm']/div/div/div/div/div/div[2]/div[3]", "xpath:idRelative"],
+        ["xpath=//div[2]/div[3]", "xpath:position"]
+      ],
+      "value": "Keep Me Signed In"
+    }, {
+      "id": "7b1f8193-2ebc-41a5-9b7c-157ce8eca8f5",
+      "comment": "",
+      "command": "assertText",
+      "target": "css=.btn-link",
+      "targets": [
+        ["css=.btn-link", "css:finder"],
+        ["xpath=//button[@type='button']", "xpath:attributes"],
+        ["xpath=//form[@id='loginForm']/div/div/div/div/div/div[2]/div[4]/button", "xpath:idRelative"],
+        ["xpath=//div[4]/button", "xpath:position"],
+        ["xpath=//button[contains(.,'I Forgot My Password')]", "xpath:innerText"]
+      ],
+      "value": "I Forgot My Password"
+    }]
+  }],
+  "suites": [{
+    "id": "5b013d69-1861-4cb4-a4ef-9cb65aa08894",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["2e71d6a2-2399-4028-80f2-ae610aebf7ad"]
+  }],
+  "urls": ["http://localhost/"],
+  "plugins": []
+}

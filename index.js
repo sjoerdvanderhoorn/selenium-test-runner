@@ -9,7 +9,7 @@ const rl = readline.createInterface({
 
 
 var sidefile = process.argv[2];
-//sidefile = "C:\\Prive\\selenium-test-runner\\examples\\aaa.side";
+//sidefile = "C:\\Prive\\selenium-test-runner\\examples\\bbb.side";
 
 /* Load settings */
 var settings = require('./settings.json');
