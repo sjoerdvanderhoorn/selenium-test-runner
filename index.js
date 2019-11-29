@@ -9,7 +9,6 @@ const rl = readline.createInterface({
 
 
 var sidefile = process.argv[2];
-//sidefile = "C:\\Prive\\selenium-test-runner\\examples\\bbb.side";
 
 /* Load settings */
 var settings = require('./settings.json');
@@ -202,6 +201,7 @@ function runConsoleListener(s, key)
 
 function openIDE()
 {
+	var child = spawn('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe', ["chrome-extension://mooikfkahbdckldjjndioackbalphokd/index.html"]);
 	console.log("Open in IDE");
 }
 
