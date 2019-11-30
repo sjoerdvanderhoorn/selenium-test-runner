@@ -92,19 +92,18 @@ function setBaseUrl()
 
 function runConsole(config)
 {
-	console.log(`Test started at ${currentTime()}`);
+	console.log(`Test started at ${new Date().toTimeString().split(" ")[0]}`);
 	console.log();
 	
+	// Configure selenium-side-runner
 	var output = "";
 	var results = "";
 	var options = {};
 	var params = [
-		'.\\node_modules\\selenium-side-runner\\dist\\index.js',
+		__dirname + "\\node_modules\\selenium-side-runner\\dist\\index.js",
 		sidefile,
-		'--base-url',
-		settings.baseurl,
-		'--output-directory=' + 'C:\\Prive\\Temp',
-		'--output-format=junit'
+		"--base-url",
+		settings.baseurl
 	];
 	if (!config.browser)
 	{
@@ -117,6 +116,12 @@ function runConsole(config)
 		// Hide F12 panel output
 		options.windowsHide = true;
 	}
+	// Create and set working directory
+	var tempWorkingDirectory = __dirname + "\\temp\\" + Math.random();
+	fs.mkdirSync(tempWorkingDirectory, { recursive: true });
+	options.cwd = tempWorkingDirectory;
+	
+	// Start selenium-side-runner
 	var child = spawn('node', params, options);
 	
 	child.stderr.on('data', (data) => {
@@ -130,7 +135,7 @@ function runConsole(config)
 
 	child.on('close', function (code, signal)
 	{
-		console.log(`Test completed at ${currentTime()}`);
+		console.log(`Test completed at ${new Date().toTimeString().split(" ")[0]}`);
 		console.log();
 		
 		if (code == 0)
@@ -204,10 +209,10 @@ async function openIDE()
 	// Open browser
 	await spawn('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe', 
 	[
-		"--app=chrome-extension://mooikfkahbdckldjjndioackbalphokd/index.html",
-		"--new-window",
-		"--user-data-dir=C:\\Prive\\selenium-test-runner\\userdata",
-		"--remote-debugging-port=9229"
+		`--app=chrome-extension://mooikfkahbdckldjjndioackbalphokd/index.html`,
+		`--new-window`,
+		`--user-data-dir=${__dirname}\\userdata`,
+		`--remote-debugging-port=9229`
 	]);
 	const CDP = require('chrome-remote-interface');
 	// https://github.com/cyrus-and/chrome-remote-interface/blob/master/README.md
@@ -219,8 +224,6 @@ async function openIDE()
 		const {Browser, Network, Page, Runtime, DOM} = chrome;
 		// Setup window
 		Browser.setWindowBounds({windowId: 1, bounds:{left: 10, top: 10, width: 800, height: 800}});
-		// Make sure saving goes into the expected folder
-		Page.setDownloadBehavior({behavior:"allow", downloadPath:"C:\\Intel\\"});
 		// Wait until page is loaded
 		await Page.enable();
 		await Page.loadEventFired();
@@ -251,10 +254,3 @@ async function openIDE()
 
 // Show menu
 menu();
-
-
-
-function currentTime()
-{
-	return new Date().toTimeString().split(" ")[0];
-}
