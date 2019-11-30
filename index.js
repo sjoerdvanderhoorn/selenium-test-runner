@@ -17,7 +17,6 @@ var settings = require('./settings.json');
 function menu()
 {
 	console.clear();
-	// Color reference: https://stackoverflow.com/questions/9781218/how-to-change-node-jss-console-font-color
 	console.log();
 	console.log(`------------------------------------`);
 	console.log(`       Selenium Test Runner`);
@@ -215,8 +214,6 @@ async function openIDE()
 		`--remote-debugging-port=9229`
 	]);
 	const CDP = require('chrome-remote-interface');
-	// https://github.com/cyrus-and/chrome-remote-interface/blob/master/README.md
-	// https://chromedevtools.github.io/devtools-protocol/tot/Page
 	let chrome;
 	try {
 		// Connect to browser
