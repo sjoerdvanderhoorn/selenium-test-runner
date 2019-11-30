@@ -199,10 +199,52 @@ function runConsoleListener(s, key)
 }
 
 
-function openIDE()
+async function openIDE()
 {
-	var child = spawn('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe', ["chrome-extension://mooikfkahbdckldjjndioackbalphokd/index.html"]);
-	console.log("Open in IDE");
+	// Open browser
+	await spawn('C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe', 
+	[
+		"--app=chrome-extension://mooikfkahbdckldjjndioackbalphokd/index.html",
+		"--new-window",
+		"--user-data-dir=C:\\Prive\\selenium-test-runner\\userdata",
+		"--remote-debugging-port=9229"
+	]);
+	const CDP = require('chrome-remote-interface');
+	// https://github.com/cyrus-and/chrome-remote-interface/blob/master/README.md
+	// https://chromedevtools.github.io/devtools-protocol/tot/Page
+	let chrome;
+	try {
+		// Connect to browser
+		chrome = await CDP({port:9229});
+		const {Browser, Network, Page, Runtime, DOM} = chrome;
+		// Setup window
+		Browser.setWindowBounds({windowId: 1, bounds:{left: 10, top: 10, width: 800, height: 800}});
+		// Make sure saving goes into the expected folder
+		Page.setDownloadBehavior({behavior:"allow", downloadPath:"C:\\Intel\\"});
+		// Wait until page is loaded
+		await Page.enable();
+		await Page.loadEventFired();
+		// Open file
+		var domDocument = await DOM.getDocument();
+		var filefield = await DOM.querySelector({ selector: "span.file-input input[type=file]", nodeId: domDocument.root.nodeId});
+		await DOM.setFileInputFiles({files:[sidefile], nodeId:filefield.nodeId});
+		// Remove overlay
+		await Runtime.evaluate({ expression: `document.querySelector(".modal-overlay").style.display = "none";` });
+		// Set window title
+		await Runtime.evaluate({ expression: `document.title="Selenium IDE - ${sidefile.replace(/\\/g,"\\\\")}";` });
+	}
+	catch (err)
+	{
+		console.error(err);
+	}
+	finally
+	{
+		if (chrome)
+		{
+			await chrome.close();
+		}
+	}
+	menu();
 }
 
 
