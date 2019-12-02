@@ -1,7 +1,9 @@
 @echo off
 
-rem Open Chrome and let the user install the Selenium IDE extension
+rem Create settings file
+if not exist settings.json copy settings.sample.json settings.json
 
+rem Open Chrome and let the user install the Selenium IDE extension
 echo.
 echo You will need to install the Selenium IDE extension 
 echo in the browser window that opens. Wait until the 
