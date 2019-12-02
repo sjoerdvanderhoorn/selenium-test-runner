@@ -1,25 +1,29 @@
 diff --git a/node_modules/selianize/dist/selianize.cjs.js b/node_modules/selianize/dist/selianize.cjs.js
-index 5e9fc27..acb6350 100644
+index 5e9fc27..aa2af78 100644
 --- a/node_modules/selianize/dist/selianize.cjs.js
 +++ b/node_modules/selianize/dist/selianize.cjs.js
-@@ -544,7 +544,20 @@ function emitOpen(target) {
+@@ -544,7 +544,24 @@ function emitOpen(target) {
  }
  
  async function emitClick(target) {
 -  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {return element.click();});`);
 +  return Promise.resolve(`
-+	for (let i = 0; i < configuration.timeout; i = i + 100) {
-+		try {
-+			await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {return element.click();});
-+			break;
-+		} catch (e) {
-+			if (i < configuration.timeout - 100) {
-+				await driver.sleep(100);
-+			} else {
-+				throw e;
++	await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);
++	await driver.findElement(${await LocationEmitter.emit(target)}).then(async (element) => {
++		for (let i = 0; i < configuration.timeout; i = i + 100) {
++			try {
++				await driver.executeScript("(arguments[0].scrollIntoView ? arguments[0].scrollIntoView(false) : null)", element);
++				return await element.click();
++				break;
++			} catch (e) {
++				if (i < configuration.timeout - 100) {
++					await driver.sleep(100);
++				} else {
++					throw e;
++				}
 +			}
 +		}
-+	}
++	});
 +  `);
  }
  
