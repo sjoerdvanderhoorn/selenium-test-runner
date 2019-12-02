@@ -11,7 +11,7 @@ const rl = readline.createInterface({
 var sidefile = process.argv[2];
 
 /* Load settings */
-var settings = require('./settings.json');
+var settings = require(__dirname + "\\settings.json");
 
 
 function menu()
@@ -84,7 +84,7 @@ function setBaseUrl()
 	rl.question('New Base-URL:\n', function (answer)
 	{
 		settings.baseurl = answer;
-		fs.writeFile(".\\settings.json", JSON.stringify(settings), function(){});
+		fs.writeFile(__dirname + "\\settings.json", JSON.stringify(settings), function(){});
 		menu();
 	});
 }
