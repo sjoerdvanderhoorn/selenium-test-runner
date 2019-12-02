@@ -1,35 +1,31 @@
 diff --git a/node_modules/selianize/dist/selianize.cjs.js b/node_modules/selianize/dist/selianize.cjs.js
-index 5e9fc27..75d426e 100644
+index 5e9fc27..acb6350 100644
 --- a/node_modules/selianize/dist/selianize.cjs.js
 +++ b/node_modules/selianize/dist/selianize.cjs.js
-@@ -382,7 +382,24 @@ function emit$4(command, options = config, snapshot) {
-         }), preprocessParameter(command.value, emitters$2[command.command].value, {
-           ignoreEscaping
-         }));
--        if (command.opensWindow) result = emitNewWindowHandling(result, command);
-+        if (command.opensWindow) { result = emitNewWindowHandling(result, command) }
-+		result = `/* ${command.command}: ${command.target} ${command.value} [${command.id}] */
-+${result}`
-+		if (!["emitControlFlow", "emitSet", "emitWait"].some(blacklisted => emitters[command.command].name.startsWith(blacklisted))) {
-+		result = `
-+for (let i = 0; i < configuration.timeout; i = i + 100) {
-+	try {
-+		${result}
-+		break;
-+	} catch (e) {
-+		if (i < configuration.timeout - 100) {
-+			await driver.sleep(100);
-+		} else {
-+			throw e;
+@@ -544,7 +544,20 @@ function emitOpen(target) {
+ }
+ 
+ async function emitClick(target) {
+-  return Promise.resolve(`await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {return element.click();});`);
++  return Promise.resolve(`
++	for (let i = 0; i < configuration.timeout; i = i + 100) {
++		try {
++			await driver.wait(until.elementLocated(${await LocationEmitter.emit(target)}), configuration.timeout);await driver.findElement(${await LocationEmitter.emit(target)}).then(element => {return element.click();});
++			break;
++		} catch (e) {
++			if (i < configuration.timeout - 100) {
++				await driver.sleep(100);
++			} else {
++				throw e;
++			}
 +		}
 +	}
-+}`
-+		}
-         res(result);
-       } catch (e) {
-         rej(e);
++  `);
+ }
+ 
+ async function emitDebugger() {
 diff --git a/node_modules/selianize/src/command.js b/node_modules/selianize/src/command.js
-index 1e40358..777565c 100644
+index 1e40358..6a318e1 100644
 --- a/node_modules/selianize/src/command.js
 +++ b/node_modules/selianize/src/command.js
 @@ -136,7 +136,24 @@ export function emit(command, options = config, snapshot) {
