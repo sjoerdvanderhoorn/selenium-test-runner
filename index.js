@@ -104,7 +104,13 @@ function runConsole(config)
 		"--base-url",
 		settings.baseurl
 	];
-	if (!config.browser)
+	if (config.browser)
+	{
+		// Show Chrome
+		params.push('-c');
+		params.push('browserName=chrome timeouts.implicit=5000');
+	}
+	else
 	{
 		// Hide Chrome
 		params.push('-c');
@@ -232,6 +238,9 @@ async function openIDE()
 		await Runtime.evaluate({ expression: `document.querySelector(".modal-overlay").style.display = "none";` });
 		// Set window title
 		await Runtime.evaluate({ expression: `document.title="Selenium IDE - ${sidefile.replace(/\\/g,"\\\\")}";` });
+		// When clicking the Save button, copy the document filename to the clipboardData
+		await Runtime.evaluate({ expression: `document.querySelector(".si-save").onclick = function(){navigator.clipboard.writeText("${sidefile.replace(/\\/g,"\\\\")}");}` });
+		await Runtime.evaluate({ expression: `window.onkeydown = function(e){if(e.ctrlKey==true && e.code=="KeyS"){navigator.clipboard.writeText("${sidefile.replace(/\\/g,"\\\\")}");}}` });
 	}
 	catch (err)
 	{
