@@ -1,5 +1,6 @@
 const readline = require('readline');
 const fs = require('fs');
+const jsonDiff = require('json-diff')
 
 const { exec, spawn } = require('child_process');
 const rl = readline.createInterface({
@@ -155,7 +156,38 @@ function runConsole(config)
 			console.log(`\x1b[31m             RESULTS                \x1b[0m`);
 			console.log(`\x1b[31m------------------------------------\x1b[0m`);
 			console.log();
-			console.log(results);
+			
+			if (results.includes("expect(received).toHaveText(expected)"))
+			{
+				var expected = /(?:Expected value to be.*\:)(?:\n)(.*)/gm.exec(results);
+				var received = /(?:Received\:)(?:\n)(.*)/gm.exec(results);
+				try
+				{
+					// Perform JSON diff
+					console.log(`\x1b[31mExpected:\x1b[0m`);
+					console.log(JSON.parse(JSON.parse(expected[1])));
+					console.log();
+					console.log(`\x1b[31mReceived:\x1b[0m`);
+					console.log(JSON.parse(JSON.parse(received[1])));
+					console.log();
+					console.log(`\x1b[31mDiff:\x1b[0m`);
+					console.log(jsonDiff.diffString(JSON.parse(JSON.parse(expected[1])), JSON.parse(JSON.parse(received[1]))));
+				}
+				catch (e)
+				{
+					// String or other value; show expected vs received
+					console.log(`\x1b[31mExpected:\x1b[0m`);
+					console.log(expected[1]);
+					console.log();
+					console.log(`\x1b[31mReceived:\x1b[0m`);
+					console.log(received[1]);
+				}
+			}
+			else
+			{
+				console.log(results);
+			}
+			
 			console.log();
 			console.log(`\x1b[31m------------------------------------\x1b[0m`);
 			console.log(`\x1b[31m           TEST FAILED              \x1b[0m`);

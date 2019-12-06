@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "chrome-remote-interface": "^0.28.0",
+    "json-diff": "^0.5.4",
     "patch-package": "^6.2.0",
     "selenium-side-runner": "^3.16.0"
   }
